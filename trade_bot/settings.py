@@ -23,8 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY  = '3ym&yq$8wi1w(=or09zrowah1&(2)wq10i7h2t%boj_03=c*0g'
-BINANCE_KEY = 'yIlAlusKX6h1SdWzXnM6OEgHeOSjKXYoh7C4hz1jjgKfWri9NrZUvdgCdHjvDsyk'
-BINANCE_SECRETKEY = '0jcDMFI7KN8VaWOjWQfCXmNndle8bL7Z1L6DsCjJPRIAERjmwoGyLKa8RlHFZ8AU'
+BINANCE_KEY = os.environ.get('BINANCEKEY')
+BINANCE_SECRETKEY = os.environ.get('BINANCEPRIVKEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
