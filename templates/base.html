@@ -1,0 +1,149 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title %}Home {% endblock title %}</title>
+        {% block head_favicon %}
+            <link rel="icon" type="image/png"
+                  href="/images/favicon.ico">
+        {% endblock head_favicon %}
+
+        {% block head_meta %}
+            {% block head_meta_charset %}
+                <meta http-equiv="Content-Type"
+                      content="text/html; charset=utf-8" />
+            {% endblock head_meta_charset %}
+            {% block head_meta_contentlanguage %}
+                <meta http-equiv="Content-Language" value="en-US" />
+            {% endblock head_meta_contentlanguage %}
+            {% block head_meta_viewport %}
+                <meta name="viewport"
+                      content="width=device-width, initial-scale=1.0">
+            {% endblock head_meta_viewport %}
+        {% endblock head_meta %}
+
+        {% block head_css %}
+            {% block head_css_site %}
+
+            {% endblock head_css_site %}
+            {% block head_css_section %}{% endblock head_css_section %}
+            {% block head_css_page %}{% endblock head_css_page %}
+        {% endblock head_css %}
+
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="{% static 'css/materialize.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/jquery-ui.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/chart.min.css' %}">
+        <link href="{% static 'fonts/Material+Icons.css' %}" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    
+        <!-- Compiled and minified JavaScript -->
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+	<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+
+        <script src="{% static 'js/materialize.min.js' %}"></script>
+        <script src="{% static 'js/moment.js' %}"></script>
+        <script src="{% static 'js/Chart.min.js' %}"></script>
+        <script src="{% static 'js/app.js' %}"></script>
+           
+    </head>
+
+    <body style=""  class=" grey darken-4">
+    {# Navigation Menu #}
+    <header>
+        <nav style="">
+            <div class="nav-wrapper grey darken-4">
+                <ul id="nav-mobile" class="left">
+                    <div id="slide-out" class="sidenav">
+                        <ul class="side">
+                            <li>
+                                <div class="user-view">
+                                    <div class="background">
+                                        <img src="{% static 'img/office.jpg' %}">
+                                    </div>
+                                    <a href="#user"><img class="circle" src="{% static 'img/forest.jpg' %}"></a>
+                                    <a href="#name"><span class="white-text name">{{user.first_name}} {{user.last_name}}</span></a>
+                                    <a href="#email"><span class="white-text email">{{user.email}}</span></a>
+                                </div>
+                            </li>
+
+
+                            <li><div class="divider"></div></li>
+                            <li><a class="subheader">Subheader</a></li>
+                            {% if user.is_authenticated %}
+                            <li><a href="/accounts/profile"
+                                    class=""><span class="material-icons">account_circle</span> Profile
+                                    <span class="new badge">4</span></a>
+                            </li>
+
+                            <li><a href="/logout">
+                                <span class="material-icons">exit_to_app</span> Log Out
+                            </a></li>
+
+                        {% else %}
+                            <li><a href="/login">Login</a></li>
+                            <li><a href="/register" class="register">Sign Up</a></li>
+                        {% endif %}
+                        </ul>
+
+                    </div>
+                     <li><a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a></li>
+
+                </ul>
+
+
+                <ul id="nav-desktop" class="col s4 hide-on-med-and-down">
+                        <li><a href="{% url 'index' %}">TRADEcoin</a></li>                
+                        <li><a href="{% url 'markets' %}"><span class="material-icons">assessment</span></a></li>                
+                </ul>
+                    
+                <ul id="nav-desktop" class="col s12 right hide-on-med-and-down">
+                    <li><a href="#" data-target="slide-out" class="sidenav-trigger"><span class="material-icons">menu</span> Menu</a></li>
+
+                    <li><a href="{% url 'teams' %}"><span class="material-icons">people</span></a></li>
+
+                    {% if user.is_authenticated %}
+                        <li><a href="/accounts/profile"><span class="material-icons">account_circle</span></a></li>
+                        <li><a href="/logout"><span class="material-icons">exit_to_app</span> </a></li>
+                    {% else %}
+                        <li><a href="/login">Login</a></li>
+                        <li><a href="/register" class="register">Sign Up</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
+
+        </nav>
+
+    </header>
+    {# The Document Body #}
+    <div id="site-wrapper">
+            {% if messages %}
+                {% for message in messages %}
+                    <div>{{message}}</div>
+                {% endfor %}
+            {% endif %}
+        {% block content %}
+            if you see this, something is wrong!
+        {% endblock content %}
+    </div>
+    {# The Footer #}
+    <div class="footer">
+        <div class="container">
+            <p>Copyright © 2021</p>
+        </div>
+    </div>
+
+    {# Set of blocks that can be used to display JavaScript files #}
+
+    {% block footer_javascript %}
+        {% block footer_javascript_site %}
+
+        {% endblock footer_javascript_site %}
+        {% block footer_javascript_section %}{% endblock footer_javascript_section %}
+        {% block footer_javascript_page %}{% endblock footer_javascript_page %}
+    {% endblock footer_javascript %}
+</body>
+
+</html>

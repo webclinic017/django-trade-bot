@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Teams{% endblock %}
+
+{% block content %}
+<style type="text/css">
+
+    .team-page {
+        
+    }
+
+    .team-page > .col > .card {
+        min-height: 150px;
+        height: 175px;
+    }
+
+</style>
+
+
+    <div class="row">
+    
+        <div class="col s12 l2">
+                     <div class="card"><div class="card-content">
+                <span class="card-title">Top Daily</span>
+                <ul class=" ">
+                {% for team in top_daily %}
+                    {% if forloop.counter == 1 %}
+                        <li class="team-1"><h5>{{forloop.counter}}. #1 {{team.name|truncatechars:10}}</li></h5>
+                    {% else %}
+                        <li class="">{{forloop.counter}}. {{team.name|truncatechars:10}}</li>
+                    {% endif %}
+                    
+                {% empty %}
+                    <li class="">No teams yet!</li>
+                {% endfor %}
+                </ul>
+
+                <span class="card-title">Top Weekly</span>
+                <ul class="">
+                {% for team in top_weekly %}
+                    {% if forloop.counter == 1 %}
+                        <li class="team-1"><h5>{{forloop.counter}}. #1 {{team.name|truncatechars:10}}</li></h5>
+                    {% else %}
+                        <li class="">{{forloop.counter}}. {{team.name|truncatechars:10}}</li>
+                    {% endif %}
+                    
+                {% empty %}
+                    <li class="">No teams yet!</li>
+                {% endfor %}
+                </ul>
+                
+                <span class="card-title">Top Monthly</span>
+                <ul class="">
+                    {% for team in top_monthly %}
+                        {% if forloop.counter == 1 %}
+                            <li class="team-1"><h5>{{forloop.counter}}. #1 {{team.name|truncatechars:10}}</li></h5>
+                        {% else %}
+                            <li class="">{{forloop.counter}}. {{team.name|truncatechars:10}}</li>
+                        {% endif %}
+                        
+                    {% empty %}
+                        <li class="">No teams yet!</li>
+                    {% endfor %}
+                </ul>
+
+            </div></div>
+        </div>
+        <div class="col l10 s12">
+            <div class="container">
+               
+
+
+
+
+                 {% for team_list in teams %}
+                    <div class="row team-page ">  
+                        {% for team in team_list %}
+                            <div class="col s12 m12 l6">
+                                <div class="card hoverable">
+                                    <div class="card-content">
+                                        <span class="card-title">Team {{team.name|truncatechars:10}}</span>
+
+                                        <p>
+                                        {{team.description}}
+                                        </p>
+                                    </div>
+                                    <div class="card-action">
+                                        <!-- Modal Trigger -->
+                                        <a class="waves-effect waves-light btn modal-trigger" href="#modal-team{{team.name}}">View Team</a>
+
+                                        <!-- Modal Structure -->
+                                        <div id="modal-team{{team.name}}" class="modal modal-fixed-footer">
+                                            <div class="modal-content">
+                                                <h4>{{team|truncatechars:10}}</h4>
+                                                
+                                                <p>{{team.description}}</p>
+                                                {{team.banner_img}}
+                                                <p>
+                                                    <table>
+                                                        {% for member in team.members.all %}
+                                                            {% if team.owner == member %}
+                                                                <b>{{member}}</b>
+                                                            {% else %}
+                                                                {{member}}
+                                                            {% endif %}
+
+                                                            {% if team.banner_img %}
+                                                                <img src="{{team.banner_img}}"/>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </table>
+                                                </p>
+                                            </div>
+                                            <div class="modal-footer">
+                                            <a href="#!" class="modal-close waves-effect btn red waves-red btn-flat">Cancel</a>
+                                            <a href="#!" class="modal-close waves-effect btn green waves-green btn-flat">Agree</a>
+                                            </div>
+                                        </div>
+                                            <script type="text/javascript">
+                                            $(document).ready(function(){
+                                                $('#modal-team{{team.name}}').modal();
+                                            });
+                                            </script>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% empty %}
+                    <h5>There are no teams just yet!</h5>
+                    <span>You can be the first to create one!</span>
+                {% endfor %}
+                <ul class="pagination">
+                    {% if pagination.num_pages > 1 %}
+                        <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+                        {% for page in pagination.page_range %}
+                            {% if pagination.page == page %}
+                                <li class="active"><a href="#!">{{page}}</a></li>
+                            {% else %}
+                                <li class=""><a href="#!">{{page}}</a></li>
+                            {% endif %}
+                            
+                        {% empty %}
+                        
+                        {% endfor %}
+                        <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+                    {% endif %}
+                </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

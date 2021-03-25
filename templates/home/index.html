@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block title %}TRADEcoin{% endblock %}
+
+{% block content %}
+<div class="row" style=" width: 100%;">
+    <div class="col col12" style=" margin: 200px;  width: 70vw;">
+
+            <div class="card">
+
+                    <div class="card-title" style=" margin: 20px; ">
+                        <div class="m3">Deposit</div>
+
+                        <div class="m3 right">
+                                {{info.serverTime}}
+                        </div>
+                    </div>
+
+
+
+                    <div class="card-content">
+			<form action="{% url "api_trade_deposit_create" %}" id="deposit_form" method="POST">
+                        <table>
+				{% csrf_token %}
+                            <tr class="form-group">
+                                <td><label>Input coin</label></td>
+                                <td class="input-field col s12 m6">
+                                    <select name="asset">
+                                        {% for symbol in symbols %}
+                                            
+                                            {% if forloop.counter == 0 %}
+                                                <option value="{{symbol}}" selected>{{symbol}}</option>
+                                            {% else %}
+                                                <option value="{{symbol}}">{{symbol}}</option>
+                                            {% endif %}
+                                            
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>                       
+                            <tr class="form-group">
+                                <td><label>Amount</label></td>
+                                <td><input name="amount" type="number" placeholder="0.005" step="0.001"/></td>
+                            </tr>
+
+                            <div class="form-group">
+                                <tr>
+                                    <td><label>Join active pool</label></td>
+                                    <!-- Switch -->
+                                    <td>
+                                        <div class="switch">
+                                            <label>
+                                            Off
+                                            <input type="checkbox" name="joinPool"/>
+                                            <span class="lever"></span>
+                                            On
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </div>
+                        </table>                                                         
+                        <button type="submit" class="right top btn green darken-1 pulse">Deposit</button>
+			</form>
+            <script type="text/javascript">
+            document.getElementById('deposit_form').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+
+                let response = await fetch('{% url "api_trade_deposit_create" %}', {
+                    method: 'POST',
+                    headers: { 'content-type': 'application/json' , "X-CSRFTOKEN": csrftoken},
+                    body: JSON.stringify(Object.fromEntries( new FormData(document.getElementById('deposit_form')).entries() ))
+                });
+
+                let result = await response.json();
+                console.log(result)
+                if(result.success){
+
+                    let deposit = ("<tr><h4>Deposit " + result.asset + "</h4><table><tr><td>Address: " + result.address + "</td></tr><tr><td>URL: <a href='" + result.url + "' target='_blank'>Blockchain</a></td></tr></table>");
+
+                    document.getElementById('deposit_form').innerHTML = deposit;
+                } else {
+                    alert(result.message);
+                }
+            });
+            </script>
+                    </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+{% endblock %}

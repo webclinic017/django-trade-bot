@@ -1,0 +1,422 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Market API",
+        "description": "Test description",
+        "termsOfService": "https://www.google.com/policies/terms/",
+        "contact": {
+            "email": "contact@snippets.local"
+        },
+        "license": {
+            "name": "BSD License"
+        },
+        "version": "v1"
+    },
+    "basePath": "/api",
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "securityDefinitions": {
+        "Basic": {
+            "type": "basic"
+        },
+        "Bearer": {
+            "in": "header",
+            "name": "Authorization",
+            "type": "apiKey"
+        }
+    },
+    "security": [
+        {
+            "Basic": []
+        },
+        {
+            "Bearer": []
+        }
+    ],
+    "paths": {
+        "/coins/kline/{asset}/{date}": {
+            "get": {
+                "operationId": "coins_kline_read",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "asset",
+                        "in": "path",
+                        "type": "string",
+                        "enum": [
+                            "BTCUSDT",
+                            "BTCETH",
+                            "ETHUSDT",
+                            "ETHBTC",
+                            "XRPUSDT",
+                            "XRPBTC",
+                            "XMRUSDT",
+                            "XMRBTC",
+                            "XLMUSDT",
+                            "XLMBTC"
+                        ],
+                        "required": true
+                    },
+                    {
+                        "name": "date",
+                        "in": "path",
+                        "description": "Interval Date",
+                        "type": "string",
+                        "enum": [
+                            "1 month",
+                            "1 day",
+                            "12 hours",
+                            "1 hour"
+                        ],
+                        "required": true
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "End Date",
+                        "required": false,
+                        "type": "string",
+                        "enum": [
+                            "1 month ago",
+                            "1 day ago",
+                            "12 hours ago",
+                            "1 hour ago"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "KLine Chart analytics data"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "tags": [
+                    "Coins"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "asset",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "name": "date",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/coins/prices": {
+            "get": {
+                "operationId": "coins_prices_list",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "OK latest market information"
+                    }
+                },
+                "tags": [
+                    "Coins"
+                ]
+            },
+            "parameters": []
+        },
+        "/trade/deposit/": {
+            "post": {
+                "operationId": "trade_deposit_create",
+                "description": "create deposit endpoint ",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "required": [
+                                "asset"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "asset": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "get deposit address"
+                    }
+                },
+                "tags": [
+                    "Trading"
+                ]
+            },
+            "parameters": []
+        },
+        "/trade/withdraw": {
+            "post": {
+                "operationId": "trade_withdraw_create",
+                "description": "create withdrawal endpoint for given address and balance",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "required": [
+                                "amount",
+                                "asset",
+                                "address"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "address": {
+                                    "type": "string"
+                                },
+                                "amount": {
+                                    "type": "integer"
+                                },
+                                "asset": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "create withdraw"
+                    }
+                },
+                "tags": [
+                    "Trading"
+                ]
+            },
+            "parameters": []
+        },
+        "/users/": {
+            "get": {
+                "operationId": "users_list",
+                "description": "User List",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Get user list",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/User"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "tags": [
+                    "Users"
+                ],
+                "security": [
+                    {
+                        "Basic": [
+                            "read"
+                        ]
+                    },
+                    {
+                        "Bearer": [
+                            "read"
+                        ]
+                    }
+                ]
+            },
+            "post": {
+                "operationId": "users_create",
+                "description": "User Registration",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "required": [
+                                "username",
+                                "email",
+                                "password"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "email": {
+                                    "type": "string"
+                                },
+                                "password": {
+                                    "type": "string"
+                                },
+                                "username": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User Created",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Data"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "tags": [
+                    "Users"
+                ],
+                "security": []
+            },
+            "patch": {
+                "operationId": "users_dummy",
+                "description": "dummy operation",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "Users"
+                ]
+            },
+            "parameters": []
+        },
+        "/users/{id}": {
+            "get": {
+                "operationId": "users_read",
+                "description": "Fetch details or update user",
+                "parameters": [
+                    {
+                        "name": "test",
+                        "in": "query",
+                        "description": "test manual param",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "test_array",
+                        "in": "query",
+                        "description": "test query array arg",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "multi"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get public user details",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "tags": [
+                    "Users"
+                ],
+                "security": [
+                    {
+                        "Basic": [
+                            "read"
+                        ]
+                    },
+                    {
+                        "Bearer": [
+                            "read"
+                        ]
+                    }
+                ]
+            },
+            "put": {
+                "operationId": "users_update",
+                "description": "Fetch details or update user",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                },
+                "tags": [
+                    "Users"
+                ]
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        }
+    },
+    "definitions": {
+        "User": {
+            "required": [
+                "username",
+                "team"
+            ],
+            "type": "object",
+            "properties": {
+                "pk": {
+                    "title": "ID",
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "username": {
+                    "title": "Username",
+                    "type": "string",
+                    "maxLength": 250,
+                    "minLength": 1
+                },
+                "team": {
+                    "title": "Team",
+                    "type": "integer"
+                },
+                "date_joined": {
+                    "title": "Date joined",
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        }
+    }
+}

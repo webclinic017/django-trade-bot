@@ -1,0 +1,169 @@
+
+$font-stack:    Helvetica, sans-serif;
+$nav-height: 40px;
+
+$primary-color: #cfd8dc;
+$secondary-color: #2e7d32;
+
+$primary-background: #212121;
+$secondary-background: #312c2c;
+
+body {
+  font: 100% $font-stack;
+  color: $primary-color;
+  background-color: $primary-background;
+}
+
+label {
+    color: $primary-color;
+}
+table {
+    color: $primary-color;
+}
+input, input:disabled {
+    color: $primary-color;
+}
+
+nav {
+    min-height: $nav-height !important; height: $nav-height;
+    line-height: $nav-height !important;
+}
+ 
+.nav-second{
+    min-height: 30px !important; height: 30px;
+    max-height: 30px;
+    line-height: 20px !important;
+}
+.search-field .search{
+    min-height: 30px !important; height: 30px;
+    max-height: 30px;
+    line-height: 20px !important;
+}
+.search-field .close{
+    top: -70px;
+    position: absolute;
+    min-height: 30px !important; height: 30px;
+    line-height: $nav-height !important;
+}
+.search-field .autocomplete{
+    min-height: 30px !important; height: 30px;
+    line-height: $nav-height !important;
+}
+
+.register {
+    background-color: $secondary-color;
+}
+
+.team-page {
+    margin-left: 250px;
+}
+.sidenav-trigger{
+    max-height: 20px !important; height: 20px;
+    line-height: 20px !important;
+}
+.sidenav-trigger i{
+    line-height: $nav-height !important;
+}
+.side-footer{
+    position: fixed;
+    bottom: 0;
+}
+
+/* overrides for materialize classes */
+.tabs {
+    background: $primary-background;
+    color: $primary-color;
+}
+
+.collection {
+
+    background-color: $secondary-background;
+    background: $secondary-background;
+    border: $secondary-background 1px solid;
+    color: $primary-color;
+}
+
+.collection-item {
+
+    background-color: $secondary-background;
+    background: $secondary-background;
+    border: $secondary-background 1px solid;
+    color: $primary-color;
+}
+
+
+.modal {
+    background-color: $secondary-background;
+    color: $primary-color;
+}
+.modal-content{
+    background-color: $secondary-background;
+    color: $primary-color;
+    
+}
+.modal-footer{
+    background-color: $secondary-background !important;
+    color: $primary-color !important;
+}
+
+.card {
+    background-color: $secondary-background;
+    color: $primary-color;
+}
+
+.card-title {
+    color: $primary-color;
+}
+
+.team-1{
+    color:rgb(31, 121, 76)
+}
+
+
+.profile {
+    color: black;
+}
+
+.team {
+    color: black;
+}
+
+.security {
+    color: black;
+}
+
+
+.container-deposit {
+    margin-left: auto;
+    margin-right: auto;
+    height: 50vh;
+    top: 50%;
+    min-width: 700px !important;
+    width: 50vw;
+}
+.card-deposit{
+    height: auto;
+    min-width: 700px !important;
+    width: 50vw;
+    left: 50%;
+    top: 50%;
+
+    border-radius: 3px;
+    background-image: url('https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.dreamstime.com%2Fillustration%2Ftransparent-shadow.html&psig=AOvVaw26ZM4OoAmM0EK8TWgwWhNg&ust=1616357586230000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCOi2qLLXv-8CFQAAAAAdAAAAABAJ');
+    background-color: $primary-background;
+
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
+}
+
+.btn-deposit {
+    background-color: #195ff7;
+    margin: 2px;
+    padding: 5px;
+
+    border-radius: 6px;
+}
+.btn-deposit:hover {
+    background-color: #0848d3;
+}

@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% block title %}Markets{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col s12 l2">
+            <div class="card"><div class="card-content">
+                <span class="card-title">Top Daily</span>
+                <ul class=" ">
+                {% for team in top_daily %}
+                    {% if forloop.counter == 1 %}
+                        <li class="team-1"><h5>{{forloop.counter}}. #1 {{team.name|truncatechars:10}}</li></h5>
+                    {% else %}
+                        <li class="">{{forloop.counter}}. {{team.name|truncatechars:10}}</li>
+                    {% endif %}
+                    
+                {% empty %}
+                    <li class="">No teams yet!</li>
+                {% endfor %}
+                </ul>
+
+                <span class="card-title">Top Weekly</span>
+                <ul class="">
+                {% for team in top_weekly %}
+                    {% if forloop.counter == 1 %}
+                        <li class="team-1"><h5>{{forloop.counter}}. #1 {{team.name|truncatechars:10}}</li></h5>
+                    {% else %}
+                        <li class="">{{forloop.counter}}. {{team.name|truncatechars:10}}</li>
+                    {% endif %}
+                    
+                {% empty %}
+                    <li class="">No teams yet!</li>
+                {% endfor %}
+                </ul>
+                
+                <span class="card-title">Top Monthly</span>
+                <ul class="">
+                    {% for team in top_monthly %}
+                        {% if forloop.counter == 1 %}
+                            <li class="team-1"><h5>{{forloop.counter}}. #1 {{team.name|truncatechars:10}}</li></h5>
+                        {% else %}
+                            <li class="">{{forloop.counter}}. {{team.name|truncatechars:10}}</li>
+                        {% endif %}
+                        
+                    {% empty %}
+                        <li class="">No teams yet!</li>
+                    {% endfor %}
+                </ul>
+
+            </div></div>
+        </div>
+
+        <div class="col s12 l10">
+            <div class="container">
+
+
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Market Value</th>
+                            <th>Fiat</th>
+                            
+                        
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for coin in market_objects.data %}
+
+                                <tr class="hoverable">
+                                   <td> <a class="modal-trigger" href="#modal-{{coin.name}}">View 
+                                   
+                                      
+                                   
+                                   </a></td>
+
+                                    <td>{{coin.name }}<label>/usdt 
+                                    {% if coin.full_name %}
+                                        ({{coin.full_name}})    
+                                    {% endif %}
+                                    </label></td>
+                                    <td>{{coin.last_market.volume}}</td>
+                                    <td>{{coin.fiat}}</td>
+                                </tr>
+                            
+                            <!-- Modal Structure -->
+  <div id="modal-{{coin.name}}" class="modal row bottom-sheet modal-fixed-footer" style="height: 80vh;">
+
+        <div class="col12">
+
+                    <ul class="tabs">
+                        <li class="tab col s3"><a href="#{{coin.name}}-fiat">Fiat</a></li>
+                        <li class="tab col s3"><a class="active" href="#{{coin.name}}-volume">Volume/Market</a></li>
+                        <li class="tab col s3 disabled"><a href="#{{coin.name}}-trades">Trades</a></li>
+                        <li class="tab col s3"><a href="#{{coin.name}}-other">Other</a></li>
+                    </ul>
+                    <div id="{{coin.name}}-fiat" class="col s12"><canvas id="chart-line-fiat-{{coin.name}}"></canvas></div>
+                    <div id="{{coin.name}}-volume" class="col s12"><canvas id="chart-line-volume-{{coin.name}}" width="100vw" height="15vh"></canvas></div>
+                    <div id="{{coin.name}}-trades" class="col s12"><canvas id="chart-line-trades-{{coin.name}}" width="100vw" height="15vh"></canvas></div>
+                    <div id="{{coin.name}}-other" class="col s12">Other</div>
+
+    </div
+  </div>
+
+    <script type="text/javascript">
+    new Chart($('#chart-line-volume-{{coin.name}}'), {
+        type: 'line',
+        data: {
+            labels: [
+                {% for period in coin.history %}
+                    '{{period.timestamp}}',
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Volume',
+                data: [
+                    {% for period in coin.history %}
+                    {
+                        t: '{{period.timestamp}}',
+                        y: {{period.volume}},
+                    },
+                    {% endfor %}
+                ],
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'time'
+                }],
+            }
+        }
+    });
+    new Chart($('#chart-line-trades-{{coin.name}}'), {
+        type: 'line',
+        data: {
+            labels: [
+                {% for period in coin.history %}
+                    '{{period.timestamp}}',
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Trades',
+                data: [
+                    {% for period in coin.history %}
+                    {
+                        t: '{{period.timestamp}}',
+                        y: '{{period.trade}}',
+                    },
+                    {% endfor %}
+                ],
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'time'
+                }],
+            }
+        }
+    });    
+    new Chart($('#chart-line-fiat-{{coin.name}}'), {
+        type: 'line',
+        data: {
+            labels: [
+                {% for period in coin.history %}
+                    '{{period.timestamp}}',
+                {% endfor %}
+            ],
+            datasets: [{
+                label: '{{coin.name}}/USD',
+                data: [
+                    {% for period in coin.history %}
+                    {
+                        t: '{{period.timestamp}}',
+                        y: '{{period.trade}}',
+                    },
+                    {% endfor %}
+                ],
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'time'
+                }],
+            }
+        }
+    });
+
+
+$('#modal-{{coin.name}}').draggable();
+
+    $(document).ready(function(){
+        $('#modal-{{coin.name}}').modal();
+    });
+    </script>
+
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <ul class="pagination">
+                    {% if market_objects.paginator.num_pages > 1 %}
+                        <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+                        {% for page in market_objects.paginator.page_range %}
+                            {% if market_objects.page == page %}
+                                <li class="active"><a href="#!">{{page}}</a></li>
+                            {% else %}
+                                <li class=""><a href="#!">{{page}}</a></li>
+                            {% endif %}
+                            
+                        {% empty %}
+                        
+                        {% endfor %}
+                        <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+                    {% endif %}
+                </ul>
+                            
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

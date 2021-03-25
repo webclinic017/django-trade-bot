@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="col s10 m4 l2">
+    <div id="content-container" class="container p-none">
+        <div class="lgn-container col-lg-8">
+            <form id="register-form" method="post" 
+                  action="{% url 'register' %}">
+                {% csrf_token %}
+                <table class="table">
+                    {% for field in form %}
+                        <tr>
+                            <td>{{ field.label_tag }}</td>
+                            <td>{{ field }}</td>
+                            {% for error in field.errors %}
+                                <p style="color: red">{{ error }}</p>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    
+                </table>
+                <input type="submit" value="Register" 
+                       class="btn btn-primary pull-right" />
+                <input type="hidden" name="next" value="{{ next }}" />
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+
+    {% if orders.error %}
+        {{orders.error.message}}
+    {% else %}
+        {% for order in orders%}
+            {{order}}
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

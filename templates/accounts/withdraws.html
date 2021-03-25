@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}My Withdrawals{% endblock %}
+
+{% block content %}
+Withdrawals
+
+ <table>
+        <thead>
+          <tr>
+              <th>#</th>
+              <th>Status</th>
+              <th>Asset</th>
+              <th>Amount</th>
+          </tr>
+        </thead>
+
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{order.pk}}</td>
+                <td>{{order.status}}</td>
+                <td>{{order.asset}}</td>
+                <td>{{order.amount}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+{% endblock %}

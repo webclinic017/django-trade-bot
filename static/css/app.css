@@ -1,0 +1,155 @@
+body {
+  font: 100% Helvetica, sans-serif;
+  color: #cfd8dc;
+  background-color: #212121;
+}
+
+label {
+  color: #cfd8dc;
+}
+
+table {
+  color: #cfd8dc;
+}
+
+input, input:disabled {
+  color: #cfd8dc;
+}
+
+nav {
+  min-height: 40px !important;
+  height: 40px;
+  line-height: 40px !important;
+}
+
+.search-field .search {
+  min-height: 30px !important;
+  height: 30px;
+}
+
+.search-field .close {
+  min-height: 30px !important;
+  height: 30px;
+}
+
+.register {
+  background-color: #2e7d32;
+}
+
+.team-page {
+  margin-left: 250px;
+}
+
+.sidenav-trigger {
+  max-height: 20px !important;
+  height: 20px;
+  line-height: 20px !important;
+}
+
+.sidenav-trigger i {
+  line-height: 40px !important;
+}
+
+.side-footer {
+  position: fixed;
+  bottom: 0;
+}
+
+/* overrides for materialize classes */
+.tabs {
+  background: #212121;
+  color: #cfd8dc;
+}
+
+.collection {
+  background-color: #312c2c;
+  background: #312c2c;
+  border: #312c2c 1px solid;
+  color: #cfd8dc;
+}
+
+.collection-item {
+  background-color: #312c2c;
+  background: #312c2c;
+  border: #312c2c 1px solid;
+  color: #cfd8dc;
+}
+
+.modal {
+  background-color: #312c2c;
+  color: #cfd8dc;
+}
+
+.modal-content {
+  background-color: #312c2c;
+  color: #cfd8dc;
+}
+
+.modal-footer {
+  background-color: #312c2c !important;
+  color: #cfd8dc !important;
+}
+
+.card {
+  background-color: #312c2c;
+  color: #cfd8dc;
+}
+
+.card-title {
+  color: #cfd8dc;
+}
+
+.team-1 {
+  color: #1f794c;
+}
+
+.profile {
+  color: black;
+}
+
+.team {
+  color: black;
+}
+
+.security {
+  color: black;
+}
+
+.container-deposit {
+  margin-left: auto;
+  margin-right: auto;
+  height: 50vh;
+  top: 50%;
+  min-width: 700px !important;
+  width: 50vw;
+}
+
+.card-deposit {
+  height: auto;
+  min-width: 700px !important;
+  width: 50vw;
+  left: 50%;
+  top: 50%;
+  border-radius: 3px;
+  background-image: url("https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.dreamstime.com%2Fillustration%2Ftransparent-shadow.html&psig=AOvVaw26ZM4OoAmM0EK8TWgwWhNg&ust=1616357586230000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCOi2qLLXv-8CFQAAAAAdAAAAABAJ");
+  background-color: #212121;
+  background-position: center;
+  /* Center the image */
+  background-repeat: no-repeat;
+  /* Do not repeat the image */
+  background-size: cover;
+  /* Resize the background image to cover the entire container */
+}
+
+.btn-deposit {
+  background-color: #195ff7;
+  margin: 2px;
+  padding: 5px;
+  border-radius: 6px;
+}
+
+.btn-deposit:hover {
+  background-color: #0848d3;
+}
+
+/*# sourceMappingURL=app.css.map */

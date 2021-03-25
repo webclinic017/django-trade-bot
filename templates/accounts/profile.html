@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% for error in errors %}
+        {{error}}
+    {% endfor %}
+    <div class="row"  style="height: 100%;">
+        <div class="col s12 m6"  style="height: 100%;">
+            <div class="profile card"  style="height: 100%;">
+                <form method="POST" action="{% url 'profile' %}">
+                    <div class="card-content">
+                        <span class="card-title">Profile</span>
+                        {% csrf_token %}
+                        <label>Make sure you use factual date, an admin might ask you to make proper changes otherwise.</label>
+                        <p>
+                            <table class="table">
+                                {{ profileForm }}
+                            </table>
+                        </p>
+                    </div>
+                    <div class="card-action" style="height: 100%;">
+                        <a href="{% url 'profile' %}" class="modal-close waves-effect waves-red btn red">Cancel</a>
+                        <button type="submit" class="modal-close waves-effect waves-green btn green">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col s12 m6">
+
+            <div class="col s12">
+                <div class="team card">
+                    
+                    <div class="card-content">
+                        <span class="card-title">Team</span>
+                    
+                        <p>
+                            <table class="table">
+                                {% if user.team %}
+                                    <table>
+                                        <tr>
+                                            <td><label>Name</label></td>
+                                            <td>{{user.team.name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><label>Owner</label></td>
+                                            <td>{{user.team.owner}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><label>Score</label></td>
+                                            <td>{{user.team.score}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><label>Creation Date</label></td>
+                                            <td>{{user.team.date_created|date}}</td>
+                                        </tr>
+                                    </table>
+                                {% else %}
+                                    Not in any team yet, create your own?
+                                {% endif %}
+                            </table>
+                        </p>
+                    </div>
+                    <div class="card-action m5">
+                        {% if user.team %}
+                            {% if user.team.owner == user %}
+                                <a class="waves-effect waves-red btn red modal-trigger" href="#modal-destroy">Destroy Team</a>
+
+                                <!-- Modal Structure -->
+                                <form method="POST" action="{% url 'profile_delete_team' %}">
+                                <div id="modal-destroy" class="modal modal-fixed-footer" style="height: 20vh;">
+                                    <div class="modal-content">
+                                    <h4>Destroy team</h4>
+                                    <p>This cannot be reversed. Are you sure?</p>
+                                            <span class="card-title">Delete Team</span>
+                                            {% csrf_token %}
+                                            <p>
+                                                <table class="table">
+                                                    {{ deleteTeamForm }}
+                                                </table>
+                                            </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="{% url 'profile' %}" class="modal-close waves-effect waves-red btn red btn-flat">Cancel</a>
+                                        <button type="submit" class="modal-close waves-effect waves-green btn green btn-flat">Delete</button>
+                                    </div>
+                                </div>
+                                </form>
+                                    <script type="text/javascript">
+                                    $(document).ready(function(){
+                                        $('#modal-destroy').modal();
+                                    });
+                                    </script>
+                            {% else %}
+                                <a href="#">Abandon team</a>
+                            {% endif %}
+                        {% else %}
+                              <!-- Modal Trigger -->
+                            <a class="waves-effect waves-light btn modal-trigger" href="#modal-create">Create Team</a>
+
+                            <!-- Modal Structure -->
+                            <div id="modal-create" class="modal modal-fixed-footer">
+                                <form method="POST" action="{% url 'profile_create_team' %}">
+                                    <div class="modal-content">
+                                        <span class="card-title">Creating Team</span>
+                                        <div class="right">
+                                            <button class="material-icons">close</button>
+                                        </div>
+                                        {% csrf_token %}
+                                        <p>A team groups members, mostly for fun.</p>
+
+                                
+                                        <p>
+                                            <table class="table">
+                                                {{ teamForm }}
+                                            </table>
+                                        </p>
+                                
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="{% url 'profile' %}" class="modal-close waves-effect waves-red btn red btn-flat">Cancel</a>
+                                        <button type="submit" class="waves-effect waves-green btn green btn-flat">Create</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <script type="text/javascript">
+                            $(document).ready(function(){
+                                $('#modal-create').modal();
+                            });
+                            </script>
+                            
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col s12">
+                <div class="security card">
+                    
+                    <div class="card-content">
+                        <span class="card-title">Security</span>
+                    
+                        <p>
+                            <table class="table">
+                                <tr>
+                                    <td>Email</td>
+                                    <td>
+                                        <label>
+                                            <input type="checkbox"/>
+                                            <span>Enable Email Authentication</sdpan>
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2FA</td>
+                                    <td>
+                                        <label>
+                                            <input type="checkbox"/>
+                                            <span>Enable 2 Factor Authentication</sdpan>
+                                        </label>
+                                    </td>
+                                </tr>
+                            </table>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
