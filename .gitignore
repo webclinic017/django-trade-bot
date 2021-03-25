@@ -1,3 +1,9 @@
-env/include/*
-env/lib/*
-env/lib64/*
+.vscode/*
+*.workspace
+
+
+node_modules/*
+package-lock.json
+
+var/*
+env/*
