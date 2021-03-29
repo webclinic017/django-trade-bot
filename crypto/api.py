@@ -98,5 +98,5 @@ def get_sub_accounts(request):
 def coin_info(request):
     """get coin information """
 
-    result = binanceManager.get_coins_info()
+    result = binanceManager.get_exchange_info()
     return Response(result)

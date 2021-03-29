@@ -98,6 +98,7 @@
                                                 {{team.banner_img}}
                                                 <p>
                                                     <table>
+                                                        Members:
                                                         {% for member in team.members.all %}
                                                             {% if team.owner == member %}
                                                                 <b>{{member}}</b>
@@ -112,9 +113,25 @@
                                                     </table>
                                                 </p>
                                             </div>
-                                            <div class="modal-footer">
-                                            <a href="#!" class="modal-close waves-effect btn red waves-red btn-flat">Cancel</a>
-                                            <a href="#!" class="modal-close waves-effect btn green waves-green btn-flat">Agree</a>
+                                            <div class="modal-footer row">
+                                            <a href="#!" class="modal-close waves-effect col s6 btn red waves-red btn-flat">Close</a>
+                                            {% if team.public %}
+                                                    {% if request.user.team == team and team.owner != request.user%}
+                                                    <form type="POST" action="{% url 'profile_join_team' pk=team.pk %}" class="col s6">
+                                                        <button type="submit" class="modal-close waves-effect btn col s12 yellow waves-green btn-flat">Abandon Team</button>
+                                                    </form>
+                                                {% else %}
+                                                    {% if team.owner == request.user %}
+                                                        <form type="POST" action="{% url 'profile_delete_team' %}" class="col s6">
+                                                            <button type="submit" class="modal-close waves-effect btn col s12 red waves-red btn-flat">Destroy Your Team</button>
+                                                        </form>
+                                                    {% else %}
+                                                        <form type="POST" action="{% url 'profile_join_team' pk=team.pk %}" class="col s6">
+                                                            <button type="submit" class="modal-close waves-effect btn col s12 green waves-red btn-flat">Join Team</button>
+                                                        </form>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endif %}
                                             </div>
                                         </div>
                                             <script type="text/javascript">

@@ -14,7 +14,7 @@ from rest_framework.pagination import PageNumberPagination
 
 from trade_bot.settings import SWAGGER_SETTINGS
 
-from .models import Member, Team, User
+from .models import Team, User
 from .serializers import UserSerializer, UserListQuerySerializer, RegistrationSerializer, TeamListQuerySerializer, TeamSerializer
 
 from .permissions import UnauthenticatedPost
@@ -69,7 +69,7 @@ class UserList(APIView):
             },
         ),
         responses={
-            200: openapi.Response('User Created', UserSerializer),
+            201: openapi.Response('User Created', UserSerializer),
             400: openapi.Response('Bad Data'),
             401: openapi.Response('Unauthorized'),
         },
@@ -88,8 +88,8 @@ class UserList(APIView):
 
 @swagger_auto_schema(method='PATCH', request_body=UserSerializer,
     responses={
-        200: openapi.Response('Get public user details', UserSerializer),
-        400: openapi.Response('Bad request, probably malformed data'),
+        200: openapi.Response('Updated user details', UserSerializer),
+        400: openapi.Response('Bad request, probably bad data'),
         401: openapi.Response('Unauthorized'),
     },
     tags=['Users']
@@ -99,7 +99,7 @@ class UserList(APIView):
         openapi.Parameter('id', openapi.IN_PATH, "User ID", type=openapi.TYPE_INTEGER),
     ], 
     responses={
-        200: openapi.Response('Get public user details', UserSerializer),
+        200: openapi.Response('Fetch public user details', UserSerializer),
         400: openapi.Response('Bad request, probably malformed data'),
         401: openapi.Response('Unauthorized'),
     },
@@ -113,19 +113,19 @@ def user_detail(request, pk):
     if not user:
         return Response({'error': 'no such user found!'})
 
-    serializer = UserSerializer(user)
+    serializer = UserListQuerySerializer(user)
 
-    #check if user matches the current user or admin
-    if request.method == "PATCH" and request.user == user or "ROLE_ADMIN" in request.user.roles:
+    #check if user matches the current user
+    # @TODO: add admin
+    #
+    if request.method == "PATCH" and request.user == user:
         serializer = UserSerializer(request.user, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    if request.user is not user:
-        return Response({'error': "You are not authorized to perform this action"}, stauts=status.HTTP_401_UNAUTHORIZED)
-
+    
     return Response(serializer.data)
 
 
@@ -161,10 +161,11 @@ class TeamList(APIView):
             required=['name'],
             properties={
                 'name': openapi.Schema(type=openapi.TYPE_STRING),
+                'public': openapi.Schema(type=openapi.TYPE_BOOLEAN),
             },
         ),
         responses={
-            200: openapi.Response('Team Created', UserSerializer),
+            200: openapi.Response('Team Created', TeamSerializer),
             400: openapi.Response('Bad Data'),
             401: openapi.Response('Unauthorized'),
         },
@@ -175,14 +176,56 @@ class TeamList(APIView):
         '''Create team model'''
         user = request.user
 
-        if not hasattr(user, 'team'):
-            serializer = TeamSerializer(data=request.data, owner=user)
+        if user.team is None:
+            serializer = TeamSerializer(data=request.data)
             if serializer.is_valid():
                 # add user as team owner
-                team = serializer.save()
-                self.team_manager.create_team(request.user, team)
-
+                team = serializer.create(serializer.validated_data, user)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
-                return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({'error': 'Already in a team'}, status=status.HTTP_400_BAD_REQUEST)
+
+@swagger_auto_schema(method='PATCH', request_body=TeamSerializer,
+    responses={
+        200: openapi.Response('Updated team details', TeamSerializer),
+        400: openapi.Response('Bad request, probably bad data'),
+        401: openapi.Response('Unauthorized'),
+    },
+    tags=['Users']
+)
+@swagger_auto_schema(methods=['GET'], 
+    manual_parameters=[
+        openapi.Parameter('id', openapi.IN_PATH, "User ID", type=openapi.TYPE_INTEGER),
+    ], 
+    responses={
+        200: openapi.Response('Fetch public team details', TeamSerializer),
+        400: openapi.Response('Bad request, probably malformed data'),
+        401: openapi.Response('Unauthorized'),
+    },
+    security=[{'Basic': ['read']}, {'Bearer': ['read']}],
+    tags=['Users'], 
+)
+@api_view(['GET', 'PATCH'])
+def team_detail(request, pk):
+    """team_detail: Fetch details or update team"""
+    user = request.user
+    team = get_object_or_404(Team.objects, pk=pk)
+
+    if not team:
+        return Response({'error': 'no such team found!'})
+
+    serializer = UserListQuerySerializer(team)
+
+    #check if user matches the current user
+    # @TODO: add admin
+    #
+    if request.method == "PATCH" and request.user == user:
+        serializer = TeamSerializer(owner=team.owner, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    return Response(serializer.data)

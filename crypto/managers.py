@@ -21,7 +21,17 @@ class BinanceManager():
         return TRADEABLE_SYMBOLS 
 
     def get_coins_info(self):
-        info = self.client.get_account_status()
+        info = {}
+        
+        for symbol in SYMBOLS:
+            symbol = "{0}USDT".format(symbol)
+            print(symbol)
+            try:
+                data = self.client.get_symbol_ticker(symbol=symbol)
+                info[symbol] = data
+            except BinanceAPIException as e: 
+                print({'error': e.message})
+        
         return info
 
     def get_exchange_info(self):
@@ -43,8 +53,16 @@ class BinanceManager():
 
         return address
 
-    def get_balance(self):
-        self.client.get_asset_balance()
+    def get_balance(self, asset: str="BTC"):
+        '''
+        Get balance of asset symbol
+        
+        :param asset required
+        :type asset str
+        
+        '''
+
+        self.client.get_asset_balance(asset=asset)
 
     def create_withdraw(self, asset: str="ETH", address: str=None, amount: float=0.1):
         '''Create withdraw endpoint for given coin, address & amount
@@ -90,7 +108,7 @@ class BinanceManager():
             :param endTime: optional
             :type endTime: int
         '''
-        sub_accounts = self.client.get_sub_account_list()
+        sub_accounts = self.client.get_sub_account_list(email=email, startTime=startTime, endTime=endTime)
         return sub_accounts
         
     def get_subaccount_withdraws(self, email: str, startTime: int=None, endTime: int=None):

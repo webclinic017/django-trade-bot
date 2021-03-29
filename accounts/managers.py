@@ -1,18 +1,49 @@
 from django.db import models
+from django.apps import apps
 
 class TeamManager(models.Manager):
     use_for_related_fields = True
 
-    def create_team(self, user, team):
+    @staticmethod
+    def create_team(user, team):
+        from .models import Member
         # ... your code here ...
         team.owner = user
-        team.members.add(user)
+
+        member = Member()
+        member.user = user
+        member.team = team
+
         team.save()
-    def add_members(self, user, team):
-        team.members.add(user)
-    def remove_member(self, user, team):
-        team.members.remove(user)
-    def transfer_member(self, user, team):
+        member.save()
+
+        return team
+
+    @staticmethod
+    def add_member(user, team):
+        from .models import Member
+
+        member = Member()
+        member.user = user
+        member.team = team
+        
+        member.save()
+
+        return member
+    
+    @staticmethod
+    def remove_member(user, team):
+        members = team.members
+        for member in members:
+
+            #match found, destroying.
+            if member.user is user:
+                member.destroy()
+        
+        return team
+    
+    @staticmethod
+    def transfer_member(user, team):
         '''@TODO: transferring in progress'''
         pass
 

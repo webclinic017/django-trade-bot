@@ -17,6 +17,8 @@ Create virtual env:
 `python3 -m venv env`
 Activate:
 `source ./env/bin/activate`
+Get requirements:
+`pip install -r requirements.txt`
 
 Requirements:
 
@@ -25,3 +27,4 @@ Requirements:
 - djangorestframework (3.12.2)
 - drf-yasg (1.20.0)
 - python-binance (0.7.9)
+

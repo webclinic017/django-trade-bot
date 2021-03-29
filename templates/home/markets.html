@@ -9,9 +9,9 @@
                 <ul class=" ">
                 {% for team in top_daily %}
                     {% if forloop.counter == 1 %}
-                        <li class="team-1"><h5>{{forloop.counter}}. #1 {{team.name|truncatechars:10}}</li></h5>
+                        <li class="team-1"><h5>#{{forloop.counter}} {{team.name|truncatechars:10}}</li></h5>
                     {% else %}
-                        <li class="">{{forloop.counter}}. {{team.name|truncatechars:10}}</li>
+                        <li class="">#{{forloop.counter}} {{team.name|truncatechars:10}}</li>
                     {% endif %}
                     
                 {% empty %}

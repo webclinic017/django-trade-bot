@@ -4,40 +4,60 @@ from drf_yasg.utils import swagger_serializer_method
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import Member, Team, User
+from .models import Team, User, Member
 
 class TeamListQuerySerializer(serializers.Serializer):
+
     class Meta:
         model = Team
-        fields = ("name", "description", "score", "owner", "date_created", "date_updated")
+        fields = ("name", "description", "score", "public", "owner", "members", "date_created", "date_updated")
 
 class TeamSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=True)
+    description = serializers.CharField(required=False)
 
-    def create(self, validated_data):
+    public = serializers.BooleanField(required=True)
+    score = serializers.IntegerField(read_only=True)
+
+    owner = serializers.PrimaryKeyRelatedField(read_only=True)
+    members = serializers.HyperlinkedRelatedField(
+        many=True,
+        read_only=True,
+        view_name="users_team_read"
+    )
+
+    def create(self, validated_data, owner):
         team = Team(validated_data)
-        team.owner = self.owner
+        team.owner = owner
+
+        member = Member()
+        member.user = owner
+
+        team.members = (member,)
         return team
+
 
     class Meta:
         model = Team
-        fields = ("name", "description", "score", "owner")
+        fields = ("name", "description", "score", "public", "owner",  "members", "date_created", "date_updated")
 
 class UserListQuerySerializer(serializers.Serializer):
-    #team = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = ("pk", "username", "team", "date_joined")
 
 class UserSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(max_length=250, read_only=True)
     first_name = serializers.CharField(max_length=35, required=False)
     last_name = serializers.CharField(max_length=35, required=False)
+
+    username = serializers.CharField(max_length=250, read_only=True)
+
     date_joined = serializers.DateTimeField(required=False)
 
     class Meta:
         model = User
-        fields = ("pk", "username", "first_name", "last_name", "email", "team", "date_joined")
+        fields = ("pk", "username", "team", "first_name", "last_name", "email", "team", "date_joined")
 
 class RegistrationSerializer(serializers.ModelSerializer):
     username = serializers.CharField(max_length=250)

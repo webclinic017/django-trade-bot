@@ -7,6 +7,13 @@ class RegistrationForm(UserCreationForm):
         model = User
         fields = ('username', 'email', 'password1', 'password2', )
 
+
+class AuthenticationForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('username', 'password')
+
+
 class ProfileForm(forms.ModelForm):
     username = forms.CharField(disabled=True)
 
@@ -35,3 +42,4 @@ class DeleteTeamForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
       self.request = kwargs.pop('request', None)
       return super(DeleteTeamForm, self).__init__(*args, **kwargs)
+

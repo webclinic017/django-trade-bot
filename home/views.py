@@ -36,11 +36,10 @@ def markets(request):
     except:
         page = 1
 
-    teams_a = accounts.Team.get_monthly_global()
-    
-
-
-   
+    teams_a = accounts.Team.get_daily_global()
+    teams_b = accounts.Team.get_weekly_global()
+    teams_c = accounts.Team.get_monthly_global()
+       
         
     data = {
         "market_objects": {
@@ -51,8 +50,8 @@ def markets(request):
         'teams': teams,
         
         'top_daily': teams_a ,
-        'top_weekly': [] ,
-        'top_monthly': [] ,
+        'top_weekly': teams_b,
+        'top_monthly': teams_c,
         
     }
     print(data)

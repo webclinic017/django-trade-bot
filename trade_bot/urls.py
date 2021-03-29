@@ -25,6 +25,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from home import views as home
 from accounts import views as accounts
 
+import django.contrib.auth.urls as auth_urls
 
 from rest_framework import permissions
 from rest_framework.decorators import api_view
@@ -52,14 +53,17 @@ urlpatterns = [
 
     #front
     path('', home.index, name='index'),
-    path('', include('django.contrib.auth.urls')),
     path('accounts/profile', accounts.profile, name="profile"),
     path('accounts/profile/orders', accounts.orders, name="orders"),
     path('accounts/profile/withdraws', accounts.withdraws, name="withdraws"),
 
     path('accounts/profile/team/delete', accounts.delete_team, name="profile_delete_team"),
     path('accounts/profile/team/create', accounts.create_team, name="profile_create_team"),
-    path('register', accounts.register, name='register'),
+    path('accounts/profile/team/join/<int:pk>', accounts.join_team, name="profile_join_team"),
+    
+    path('login/', accounts.login, name="login"),
+    path('register/', accounts.register, name='register'),
+    path('logout/', accounts.logout, name='logout'),
 
     path('teams', home.teams, name="teams"),
     path('markets', home.markets, name="markets"),

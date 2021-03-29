@@ -1,16 +1,17 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404
-
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.models import User
 
-from .models import Member, Team
-from .forms import RegistrationForm, ProfileForm, TeamForm, DeleteTeamForm
+from .models import Member ,Team, User
+from .forms import RegistrationForm, AuthenticationForm, ProfileForm, TeamForm, DeleteTeamForm
+from .managers import TeamManager
 
 from crypto.managers import BinanceManager
+
 binanceManager = BinanceManager()
 
 #https://api.binance.com/api/v1/exchangeInfo
@@ -20,24 +21,46 @@ def register(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            print(user)
             user.refresh_from_db()  
-            # load the profile instance created by the signal
             user.save()
+
+            # load the profile instance created by the signal
             raw_password = form.cleaned_data.get('password1')
  
             # login user after signing up
             user = authenticate(username=user.username, password=raw_password)
-            login(request, user)
+            auth_login(request, user)
  
-            # redirect user to home page
             return redirect('index')
     else:
         form = RegistrationForm()
     
     return render(request, 'accounts/register.html', {'form': form})
 
+def login(request):
+    if request.method == 'POST':
+    
+        username = request.POST['username']
+        password = request.POST['password']
 
+        # login
+        user = authenticate(username=username, password=password)
+        auth_login(request, user)
+        return redirect('index')
+
+    else:
+        form = AuthenticationForm()
+    
+    return render(request, 'accounts/login.html', {'form': form})
+
+@login_required(login_url='/login/')
+def logout(request):
+    auth_logout(request)
+    return redirect('index')
+
+
+
+@login_required(login_url='/login/')
 def withdraws(request):
     #temporary, use sub-accounts instead
     withdraws = binanceManager.get_withdrawal_history()
@@ -45,6 +68,7 @@ def withdraws(request):
     return render(request, 'accounts/withdraws.html', {'withdraws': withdraws})
 
 
+@login_required(login_url='/login/')
 def orders(request):
     user = request.user
     #temporary, use sub accounts instead
@@ -53,7 +77,7 @@ def orders(request):
 
     return render(request, 'accounts/orders.html', {'orders': orders})
 
-@login_required(login_url='/login')
+@login_required(login_url='/login/')
 def profile(request):
     user = request.user
 
@@ -67,39 +91,29 @@ def profile(request):
             return redirect('profile')
     else:
         profileForm = ProfileForm(instance=user)
-        teamForm    = TeamForm()
+        teamForm    = TeamForm(instance=user.team)
         deleteTeamForm = {}
-        try:
-            deleteTeamForm = DeleteTeamForm(instance=user.team)
-        except:
-            deleteTeamForm = None
-            pass
+        deleteTeamForm = DeleteTeamForm(instance=user.team)
     return render(request, 'accounts/profile.html', {'profileForm': profileForm, 'teamForm': teamForm, 'deleteTeamForm': deleteTeamForm})
 
 # POST request to create team
-@login_required(login_url='/login')
+@login_required(login_url='/login/')
 def create_team(request):
     user = request.user
+    teamManager = TeamManager()
+
     if request.method == "POST":
         teamForm    = TeamForm(request.POST, request.FILES)
 
         if teamForm.is_valid():
-            team = Team()            
-            team = teamForm.save()
+            team = Team()
+            team = teamForm.save(commit=False)
+            teamManager.create_team(user, team)
+            print(team, user)
 
-            #TODO: fix this portion
-            # team.objects.create_team(user, team) 
-            #
-            # we add our user as owner of this team
-            team.owner = user
-            
-            # next we set the team members to the owner only, people get added later on if they join.
-            team.members.add(user)
-            team.save()
-
-            #redirect user
             return redirect('profile')
         else:
+
             for field in teamForm:
                 for error in field.errors:
                     messages.error(request, error)
@@ -108,8 +122,7 @@ def create_team(request):
     else:
         return redirect('profile')
 
-# POST request to delete team if the owner, or leave
-@login_required(login_url='/login')
+@login_required(login_url='/login/')
 def delete_team(request):
     user = request.user
     if request.method == "POST":
@@ -125,6 +138,29 @@ def delete_team(request):
         return redirect('profile')
     else:
         return redirect('profile')
+
+@login_required(login_url='/login/')
+def join_team(request, pk):
+    user = request.user
+    team = get_object_or_404(Team, pk=pk)
+    if team.public:
+
+        print("adding user to team")
+        teamManager = TeamManager()
+        teamManager.add_member(user, team)
+        
+    return redirect('profile')
+
+@login_required(login_url='/login/')
+def abandon_team(request, pk):
+    user = request.user
+    team = get_object_or_404(Team, pk=pk)
+    if user != team.owner and get_object_or_404(Member, user=user):
+
+        teamManager = TeamManager()
+        teamManager.remove_member(user, team)
+        
+    return redirect('profile')
 
 
 
