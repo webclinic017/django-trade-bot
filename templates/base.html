@@ -68,38 +68,50 @@
                                 </div>
                             </li>
 
+                            <li><div class="divider"></div></li>
+                            <li><a class="subheader">General</a></li>
+                            <li><a href="{% url 'teams' %}"> Teams</a></li>
+                            <li><a href="{% url 'markets' %}"> Market</a></li>                
 
                             <li><div class="divider"></div></li>
-                            <li><a class="subheader">Subheader</a></li>
+                            <li><a class="subheader">Swap</a></li>
+                            <li><a href="{% url 'index' %}">Future</a></li>                
+
+                           <li><div class="divider"></div></li>
+                            <li><a class="subheader">Account</a></li>
                             {% if user.is_authenticated %}
                             <li><a href="/accounts/profile"
                                     class=""><span class="material-icons">account_circle</span> Profile
-                                    <span class="new badge">4</span></a>
+                                        {% if user.notifications %}
+                                            <span class="new badge">{{user.notifications|length}}</span>
+                                        {% endif %}
+                                    </a>
                             </li>
-
-                            <li><a href="/logout">
-                                <span class="material-icons">exit_to_app</span> Log Out
-                            </a></li>
+                        <li><a href="/logout"><span class="material-icons">exit_to_app</span></a></li>
 
                         {% else %}
                             <li><a href="/login">Login</a></li>
                             <li><a href="/register" class="register">Sign Up</a></li>
                         {% endif %}
+                            
                         </ul>
 
                     </div>
-                     <li><a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a></li>
 
                 </ul>
-
-
+                <ul>
+                    <li><a href="#" data-target="slide-out" class="sidenav-triggerr"><span class="material-icons">menu</span> </a></li>
+                </ul>
                 <ul id="nav-desktop" class="col s4 hide-on-med-and-down">
                         <li><a href="{% url 'index' %}">TRADEcoin</a></li>                
                         <li><a href="{% url 'markets' %}"><span class="material-icons">assessment</span></a></li>                
+
                 </ul>
                     
+                <ul>
+                </ul>
+
                 <ul id="nav-desktop" class="col s12 right hide-on-med-and-down">
-                    <li><a href="#" data-target="slide-out" class="sidenav-trigger"><span class="material-icons">menu</span> Menu</a></li>
 
                     <li><a href="{% url 'teams' %}"><span class="material-icons">people</span></a></li>
 

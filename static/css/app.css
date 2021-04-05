@@ -22,14 +22,32 @@ nav {
   line-height: 40px !important;
 }
 
+.nav-second {
+  min-height: 30px !important;
+  height: 30px;
+  max-height: 30px;
+  line-height: 20px !important;
+}
+
 .search-field .search {
   min-height: 30px !important;
   height: 30px;
+  max-height: 30px;
+  line-height: 20px !important;
 }
 
 .search-field .close {
+  top: -70px;
+  position: absolute;
   min-height: 30px !important;
   height: 30px;
+  line-height: 40px !important;
+}
+
+.search-field .autocomplete {
+  min-height: 30px !important;
+  height: 30px;
+  line-height: 40px !important;
 }
 
 .register {
@@ -40,13 +58,13 @@ nav {
   margin-left: 250px;
 }
 
-.sidenav-trigger {
+.sidenav-triggerr {
   max-height: 20px !important;
   height: 20px;
   line-height: 20px !important;
 }
 
-.sidenav-trigger i {
+.sidenav-triggerr i {
   line-height: 40px !important;
 }
 

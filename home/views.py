@@ -70,16 +70,19 @@ def teams(request):
         page = 0
 
     #setup teams
-    teams_a = accounts.Team.objects.all()
+
+    teams_a = accounts.Team.get_daily_global()
+    teams_b = accounts.Team.get_weekly_global()
+    teams_c = accounts.Team.get_monthly_global()
 
     paginator = Paginator(teams_a, per_page)
     pages = paginator.page(page)
 
     data = {
         "teams": [pages.object_list],
-        "top_daily": [],
-        "top_weekly": [],
-        "top_monthly": [],
+        "top_daily": teams_a,
+        "top_weekly": teams_b,
+        "top_monthly": teams_c,
     }
 
     print(data)

@@ -1,4 +1,6 @@
 # production
+secrets.txt
+
 
 .vscode/*
 *.workspace
@@ -15,3 +17,6 @@ env/*
 *.pyc
 __pycache__/*
 db.sqlite3
+
+# swagger
+swagger.json

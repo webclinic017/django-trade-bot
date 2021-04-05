@@ -62,7 +62,8 @@ class BinanceManager():
         
         '''
 
-        self.client.get_asset_balance(asset=asset)
+        balance = self.client.get_asset_balance(asset=asset)
+        return balance
 
     def create_withdraw(self, asset: str="ETH", address: str=None, amount: float=0.1):
         '''Create withdraw endpoint for given coin, address & amount
@@ -122,7 +123,7 @@ class BinanceManager():
         transfers = self.client.get_sub_account_transfer_history(email=email, startTime=startTime, endTime=endTime)
 
         return transfers
-    def get_subaccount_deposits(self, email: str):
+    def get_subaccount_deposits(self, email: str, asset: str=None):
         '''
             View sub trading account deposit history by email
             :param email required
@@ -130,9 +131,8 @@ class BinanceManager():
 
         '''
         try:
-            self.client.create_isolated_margin_account()
 
-            deposits = self.client.get_subaccount_deposit_history(email=email)
+            deposits = self.client.get_subaccount_deposit_history(email=email, coin=asset)
         except BinanceAPIException as e:
             return {'error': e}
         

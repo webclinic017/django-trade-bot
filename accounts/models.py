@@ -6,6 +6,8 @@ import datetime
 
 from .managers import TeamManager
 
+# teams
+
 
 class Member(models.Model):
     user = models.ForeignKey("User", on_delete=models.DO_NOTHING, )
@@ -35,6 +37,7 @@ class Team(models.Model):
     def __str__(self):
         return self.name
 
+    @property
     def members(self):
         '''        get members from team         '''
         members = Member.objects.filter(team=self)
@@ -91,18 +94,17 @@ class Team(models.Model):
         db_table = "users_teams"
 
 
-# Create your models here.
+class Referee(models.Model):
+    user = models.ForeignKey('User', on_delete=models.DO_NOTHING)
+
+    class Meta:
+        db_table = "users_refered"
+
 class User(AbstractUser):
     timezone = models.CharField(max_length=55, default='Europe/London')
-    
+
     @property
     def team(self):
-
-        try:
-            team = Team.objects.get(owner=self)
-        except Team.DoesNotExist:
-            team = None
-
         try:
             member = Member.objects.get(user=self)
             team = member.team
@@ -110,6 +112,15 @@ class User(AbstractUser):
             team = None
 
         return team
+    
+    @property
+    def referees(self):
+        '''Return refered users by current user'''
+        try:
+            referees = Referee.objects.get(owner=self)
+        except Referee.DoesNotExist:
+            referees = None
+        return referees
     
 
     class Meta:

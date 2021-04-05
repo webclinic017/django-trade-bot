@@ -19,13 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
 
       //init materialize components old fashioned way 
-      $('.sidenav').sidenav();
-      $('.modal-trigger').modal();
-      $('.tabs').tabs();
-
-
-      $('select').formSelect();
-
+      M.AutoInit();
         
       data_global = {
         Markets: { 
@@ -42,13 +36,22 @@ document.addEventListener('DOMContentLoaded', function() {
         },
       };
   
-      data = {
+      data = { 
         "Markets": null,
         "Profile": null,
         "FAQ": null,
         "Questions": null,
       };
   
+      //sidenav
+      var isOpen = false;
+      var sideNav = $('.sidenav-triggerr');
+
+      sideNav.on('click', function(){
+        $('.sidenav').sidenav('open')
+        return;
+      });
+
       //autocompletion for search nav
       $('input.autocomplete').autocomplete({
         data: data,

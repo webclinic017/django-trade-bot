@@ -62,17 +62,17 @@ def logout(request):
 
 @login_required(login_url='/login/')
 def withdraws(request):
-    #temporary, use sub-accounts instead
-    withdraws = binanceManager.get_withdrawal_history()
+    
+    user = request.user
+    withdraws = binanceManager.get_subaccount_withdraws(email=user.email)
 
     return render(request, 'accounts/withdraws.html', {'withdraws': withdraws})
 
 
 @login_required(login_url='/login/')
 def orders(request):
-    user = request.user
-    #temporary, use sub accounts instead
 
+    user = request.user
     orders = binanceManager.get_subaccount_deposits(email=user.email)
 
     return render(request, 'accounts/orders.html', {'orders': orders})
