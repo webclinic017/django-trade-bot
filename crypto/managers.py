@@ -141,8 +141,14 @@ class BinanceManager():
     
     def get_prices(self):
         '''Create trading prices of all coins'''
-        #address = self.client.get_symbol_info("BTCUSDT")
+        
         tickers = self.client.get_all_tickers()
+        return tickers    
+        
+    def get_future_prices(self):
+        '''Create trading prices of all coins'''
+
+        tickers = self.client.futures_symbol_ticker()
         return tickers
 
     def get_kline_history(self, coin: str='BNBBTC', date: str="1 day ago UTC", end_date: str=None):

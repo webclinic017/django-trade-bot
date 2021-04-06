@@ -169,7 +169,6 @@ class TeamList(APIView):
             400: openapi.Response('Bad Data'),
             401: openapi.Response('Unauthorized'),
         },
-        security=[],
         tags=['Users'],
     )
     def post(self, request):

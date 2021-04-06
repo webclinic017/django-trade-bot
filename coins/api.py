@@ -87,6 +87,18 @@ def latest_price_list(request):
     return Response(prices)
 
 
+@swagger_auto_schema(method='get',
+    responses={
+        200: openapi.Response('OK latest market information'),
+    }, tags=['Coins']
+)
+@api_view(['GET'])
+def latest_future_list(request):
+    prices = binanceManager.get_future_prices()
+
+    return Response(prices)
+
+
 @swagger_auto_schema(method='get', manual_parameters=[
     openapi.Parameter('asset', openapi.IN_PATH, type=openapi.TYPE_STRING,
         enum=[
